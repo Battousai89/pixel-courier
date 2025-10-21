@@ -33,7 +33,9 @@ class HUDManager {
         this.drawTimer(ctx, viewW, game.timerRemainingMs);
         this.drawFps(ctx, resized);
         this.drawStatsTopRight(ctx, viewW, game, resized);
-        const elapsedMs = (game.timerTotalMs ?? 0) - (game.timerRemainingMs ?? 0);
+        const elapsedMs = (game.elapsedAtGameOverMs != null && (game.state === 'paused' && game.gameOver))
+            ? game.elapsedAtGameOverMs
+            : ((game.timerTotalMs ?? 0) - (game.timerRemainingMs ?? 0));
         this.drawBottomLeftHud(ctx, viewH, game.player, game.deliveries, elapsedMs, resized);
         if (game.target) this.drawTargetArrow(game.player, game.target, game.camera);
         if (game.boosts && game.boosts.boosts.length) {
@@ -312,7 +314,7 @@ class HUDManager {
 
         // Elapsed time total
         y += 20;
-        const totalMs = (game.timerTotalMs ?? 0) - (game.timerRemainingMs ?? 0);
+        const totalMs = (game.elapsedAtGameOverMs != null) ? game.elapsedAtGameOverMs : ((game.timerTotalMs ?? 0) - (game.timerRemainingMs ?? 0));
         const totalSec = Math.max(0, Math.floor(totalMs / 1000));
         const mm = String(Math.floor(totalSec / 60)).padStart(2, '0');
         const ss = String(totalSec % 60).padStart(2, '0');

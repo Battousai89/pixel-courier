@@ -204,18 +204,18 @@ const GAME_CONFIG = {
     shop: {
         // Upgrades that can be purchased in pause menu
         player: {
+            // Increase maximum HP by addHp
+            maxHp: { cost: 30, addHp: 20 },
             // Increase move speed by addMps meters/second
             moveSpeed: { cost: 50, addMps: 1.0 },
-            // Increase maximum HP by addHp
-            maxHp: { cost: 50, addHp: 20 },
         },
         boosts: {
+            // Extend energy boost duration by seconds
+            energyDuration: { cost: 20, addSeconds: 5 },
             // Increase random coin value by addMin..addMax
-            coinValue: { cost: 40, addMin: 5, addMax: 10 },
+            coinValue: { cost: 30, addMin: 5, addMax: 10 },
             // Add extra seconds to clock boost effect
             clockTime: { cost: 40, addSeconds: 10 },
-            // Extend energy boost duration by seconds
-            energyDuration: { cost: 40, addSeconds: 5 },
         }
     },
     // Rewards and pickups tuning

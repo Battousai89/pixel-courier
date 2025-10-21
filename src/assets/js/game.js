@@ -11,6 +11,8 @@ class Game {
         this.deliveries = 0;
         this.timerTotalMs = 3 * 60 * 1000; // 3 minutes total
         this.timerRemainingMs = this.timerTotalMs; // remaining countdown
+        // Snapshot of elapsed time at the moment of game over (ms)
+        this.elapsedAtGameOverMs = null;
 
         this.state = 'stopped'; // 'stopped' | 'running' | 'paused'
         this.gameOver = false;   // game over flag
@@ -89,6 +91,9 @@ class Game {
         this.target = Target.spawnAround(this.player.xM, this.player.yM);
         this.state = 'running';
         this.lastTimestamp = performance.now();
+        // Reset game-over snapshot on new run
+        this.gameOver = false;
+        this.elapsedAtGameOverMs = null;
         // Center camera on player at start
         this.camera.setCenter(this.player.xM + (this.player.w / 2) / METERS_TO_PIXELS, this.player.yM + (this.player.h / 2) / METERS_TO_PIXELS);
 
@@ -224,6 +229,8 @@ class Game {
         this.timerRemainingMs = Math.max(0, this.timerRemainingMs - clamped);
         // End game when countdown reaches zero
         if (!this.gameOver && this.timerRemainingMs <= 0) {
+            // Snapshot elapsed time at game-over
+            this.elapsedAtGameOverMs = (this.timerTotalMs ?? 0) - (this.timerRemainingMs ?? 0);
             this.gameOver = true;
             this.state = 'paused';
         }
@@ -350,6 +357,8 @@ class Game {
             }
             // Check Game Over
             if (!this.gameOver && this.player.model.hp <= 0) {
+                // Snapshot elapsed time at game-over
+                this.elapsedAtGameOverMs = (this.timerTotalMs ?? 0) - (this.timerRemainingMs ?? 0);
                 this.gameOver = true;
                 this.state = 'paused';
                 try { this.playSfx('game_over'); } catch {}
